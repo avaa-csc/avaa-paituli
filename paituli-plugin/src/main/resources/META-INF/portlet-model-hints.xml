@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="fi.csc.avaa.paituli.db.model.paituliloki">
+		<field name="event_id" type="int" />
+		<field name="saltedhash" type="String" />
+		<field name="organisaatio" type="String" />
+		<field name="aineisto" type="String" />
+		<field name="tiedotojenlkm" type="int" />
+		<field name="paiva" type="Date" />
+	</model>
+</model-hints>

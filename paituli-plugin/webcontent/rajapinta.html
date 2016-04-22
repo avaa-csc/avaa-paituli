@@ -1,0 +1,137 @@
+<script src="//code.jquery.com/jquery-2.1.3.min.js" type="text/javascript"></script>
+<style type="text/css">#content {
+    margin: 0 auto;
+    max-width: 1000px;
+}
+ol li {
+    margin: 10px 0;
+}
+ul li {
+    margin: 0;
+}
+table {
+ border-collapse: collapse;
+}
+td, th {
+  padding: 6px;
+  border: 1px solid #ccc;
+}
+td {
+text-align: left;
+}
+</style>
+<script type="text/javascript">
+window.onload = function() {
+	hakaUser = Liferay.ThemeDisplay.isSignedIn();
+	if (hakaUser){
+		$.ajax({ 'url' : '/secure/files/geoserverp.txt',
+	    	'dataType': 'json',
+			'success' : function(result) {
+				document.getElementById("paituli_protected_div").style.display = 'block';
+				document.getElementById("paituli_protected_message").style.display = 'none';				
+				document.getElementById("username").innerHTML = result.username;
+				document.getElementById("pwd").innerHTML = result.pwd;
+				}
+		});
+	}
+	else{
+		document.getElementById("paituli_protected_div").style.display = 'none';
+		document.getElementById("paituli_protected_message").style.display = 'block';
+	}
+}
+</script>
+<h1>Paitulin rajapinnat</h1>
+
+<p>Suuri osa Paitulin aineistoista on saatavilla OGC:n WMS-, WFS- ja WMTS-rajapintojen kautta. WFS rajapinta on saatavilla vain vektoriaineistoille. Tarkka lista rajapinnan kautta saatavilla olevista aineistoista löytyy tämän sivun lopusta.</p>
+
+<p>Rajapinnan kautta ladatuille aineistoille pätevät samat käyttöoikeudet kuin latauspalvelun kautta ladattaessa. Aineistojen käyttöehdot ja kuvaukset löytyvät <a href="/web/paituli/metadata">Metatiedot </a>sivulta.</p>
+
+<p>Aineistot ovat saatavilla seuraavista osoitteista:</p>
+
+<h4>Avoimet aineistot</h4>
+
+<table>
+	<tbody>
+		<tr>
+			<td><strong>Rajapinta</strong></td>
+			<td><strong>URL</strong></td>
+		</tr>
+		<tr>
+			<td>WMS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli/gwc/service/wms?</td>
+		</tr>
+		<tr>
+			<td>WMTS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli/gwc/service/wmts?</td>
+		</tr>
+		<tr>
+			<td>WFS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli/wfs?</td>
+		</tr>
+		<tr>
+			<td>WCS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli/wcs?</td>
+		</tr>
+	</tbody>
+</table>
+
+
+<p>&nbsp;</p>
+
+<h4>Aineistot, jotka ovat saatavilla korkeakoulujen opiskelijoille ja henkilökunnalle opetus- ja tutkimuskäyttöön</h4>
+<div id="paituli_protected_message">Salasanalla suojattujen rajapintojen kuvaus on saatavilla vain <a href="https://avaa.tdata.fi/web/paituli/rajapinta">kirjautuneille</a> käyttäjille.</div>
+<div id="paituli_protected_div" style="display: none">
+<table>
+	<tbody>
+		<tr>
+			<td><strong>Rajapinta</strong></td>
+			<td><strong>URL</strong></td>
+		</tr>
+		<tr>
+			<td>WMS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli_protected/gwc/service/wms?</td>
+		</tr>
+		<tr>
+			<td>WMTS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli_protected/gwc/service/wmts?</td>
+		</tr>
+		<tr>
+			<td>WFS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli_protected/wfs?</td>
+		</tr>
+		<tr>
+			<td>WCS</td>
+			<td>http://avaa.tdata.fi/geoserver/paituli_protected/wcs?</td>
+		</tr>
+		<tr>
+			<td>Käyttäjätunnus</td>
+			<td>
+			<div id="username">&nbsp;</div>
+			</td>
+		</tr>
+		<tr>
+			<td>Salasana</td>
+			<td>
+			<div id="pwd">&nbsp;</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<p>&nbsp;</p>
+
+<p>WMTS-palvelun tiilitys: ERTS-TM35-FIN (EPSG:3067, <a href="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS180_liite1/JHS180_liite1.html#H7">JHS180</a>) ja Spherical Mercator (EPSG:3857).</p>
+
+<p>&nbsp;</p>
+
+<h4>Ohjeet</h4>
+
+<ul>
+	<li><a href="https://research.csc.fi/gis-guidelines">Ohjeita </a>rajapintapalvelujen käyttöön.</li>
+	<li><a href="/openstreetmap">AVAA OpenStreetMap</a> -sivulla on OpenLayers-kirjastolla toteutettuja esimerkkejä.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h4>Rajapinnoilta saatavilla olevat aineistot</h4>

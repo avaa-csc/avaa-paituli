@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>fi.csc.avaa.paituli</groupId>
+	<artifactId>paituli-portlet</artifactId>
+	<packaging>war</packaging>
+	<name>Paituli portlets</name>
+	<version>0.1</version>
+	
+	<parent>
+		<artifactId>vaadin-liferay-portlet-maven-parent</artifactId>
+		<groupId>fi.csc.avaa</groupId>
+		<version>1.0</version>
+		<relativePath>../avaa-common/vaadin_liferay_portlet_parent_pom.xml</relativePath>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.csc.avaa</groupId>
+			<artifactId>AvaaTools</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+		   <groupId>org.vaadin.addons</groupId>
+		   <artifactId>filteringtable</artifactId>
+		   <version>0.9.14.v7</version>
+		</dependency>
+		<dependency>
+		  <groupId>javax.servlet</groupId>
+		  <artifactId>servlet-api</artifactId>
+		  <version>2.5</version>
+		  <scope>provided</scope>
+		</dependency>
+		<dependency>
+		  <groupId>javax.servlet.jsp</groupId>
+		  <artifactId>jsp-api</artifactId>
+		  <version>2.1</version>
+		  <scope>provided</scope>
+		</dependency>
+		<dependency>
+		  <groupId>taglibs</groupId>
+		  <artifactId>standard</artifactId>
+		  <version>1.1.2</version>
+		</dependency>
+		<dependency>
+		  <groupId>javax.servlet</groupId>
+		  <artifactId>jstl</artifactId>
+		  <version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+	</dependencies>
+
+</project>
