@@ -101,7 +101,7 @@ public class ApiTable extends CustomComponent {
 	}
 
 	private List<ApiBean> getMetadata() {
-		final String METADATA_API_URL = "http://127.0.0.1:" + UI.getCurrent().getPage().getLocation().getPort() + "/paituli-portlet/paituliAPI.jsp";
+		final String METADATA_API_URL = "https://"+UI.getCurrent().getPage().getLocation().getHost()+":443/paituli-portlet/paituliAPI.jsp";
 		List<ApiBean> beans = new ArrayList<>();
 		HttpURLConnection conn = null;
 		InputStream istream = null;

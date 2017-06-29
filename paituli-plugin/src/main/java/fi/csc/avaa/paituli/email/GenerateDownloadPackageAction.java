@@ -4,25 +4,28 @@
  */
 package fi.csc.avaa.paituli.email;
 
+import fi.csc.avaa.tools.StringTools;
+import fi.csc.avaa.tools.logging.AvaaLogger;
+import fi.csc.avaa.vaadin.email.Action;
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-
-import org.apache.commons.lang3.RandomStringUtils;
-
-import fi.csc.avaa.tools.StringTools;
-import fi.csc.avaa.tools.logging.AvaaLogger;
-import fi.csc.avaa.vaadin.email.Action;
 
 /**
  * @author jmlehtin
@@ -37,7 +40,7 @@ public class GenerateDownloadPackageAction implements Action<String> {
 	private String outfilename;
 	private final String OUTFILE_PREFIX = "paituli_";
 	private final String OUTFILE_EXTENSION = ".zip";
-	private final String OUTFILE_BASE_URL = "http://avaa.tdata.fi/tmp/";
+	private final String OUTFILE_BASE_URL = "https://avaa.tdata.fi/tmp/";
 	private final String  SEPARATOR = "/";
 	private final int BUFF = 8096;
 	
@@ -59,26 +62,41 @@ public class GenerateDownloadPackageAction implements Action<String> {
 	    }
 	}
 
+    /**
+     * Muutettu 12.10.2016. kopioimaan zip-tiedoston sisältö tiedoston itsensä asemasta sisäkkäisten ziptiedostojen
+     * välttämiseksi. AVAA-741 Zip files to folders in Paituli .zip-file generation
+     *
+     *
+     * @param file File to add zip
+     * @param zout ZipOutputStream to add file
+     * @throws IOException
+     */
 	void zipFile(File file, ZipOutputStream zout) throws IOException {
-	    FileInputStream fin = new FileInputStream(file);
+
 	    String name = file.getName();
-	    if (name.endsWith("jp2") || name.endsWith("zip")) {    	
+	    if (name.endsWith("jp2")) {
 	        zout.setLevel(Deflater.NO_COMPRESSION);
 	    }
-	    zout.putNextEntry(new ZipEntry(entryname(file)));
-	    int length;
-	    FileChannel ch = fin.getChannel();
-	    MappedByteBuffer mb = ch.map(MapMode.READ_ONLY,
-	        0L, ch.size( ));
-	    byte[] barray = new byte[BUFF];
-	    while(mb.hasRemaining()) {
-	    	length = Math.min(mb.remaining( ), BUFF);
-	        mb.get(barray, 0, length);   
-	        zout.write(barray, 0, length);
-	    }
-	    zout.closeEntry();
-	    zout.setLevel(Deflater.BEST_COMPRESSION);
-	    fin.close();
+	    if (name.endsWith(OUTFILE_EXTENSION)) { // .zip
+            zipContenCopy(file, zout);
+        } else {
+            FileInputStream fin = new FileInputStream(file);
+            zout.putNextEntry(new ZipEntry(entryname(file)));
+            int length;
+            FileChannel ch = fin.getChannel();
+            MappedByteBuffer mb = ch.map(MapMode.READ_ONLY,
+                    0L, ch.size());
+            byte[] barray = new byte[BUFF];
+            while (mb.hasRemaining()) {
+                length = Math.min(mb.remaining(), BUFF);
+                mb.get(barray, 0, length);
+                zout.write(barray, 0, length);
+            }
+            zout.closeEntry();
+            zout.setLevel(Deflater.BEST_COMPRESSION);
+            fin.close();
+        }
+        //System.out.println("Zip done:"+name);
 	}
 
 	void zipSubDirectory(String basePath, File dir, ZipOutputStream zout) throws IOException {
@@ -94,6 +112,43 @@ public class GenerateDownloadPackageAction implements Action<String> {
 	        }
 	    }
 	}
+
+    /**
+     * stackoverflow.com/questions/11766741/what-is-the-idiomatic-way-to-copy-a-zipentry-into-a-new-zipfile
+     *
+     * @param file File file.zip which content to copy
+     * @param zout  ZipOutputStream to add file
+     */
+    void zipContenCopy(File file,  ZipOutputStream zout) {
+        try {
+            String path = entryname(file);
+            path = path.substring(0, path.length()-4) + SEPARATOR; //remove .zip
+            zout.putNextEntry(new ZipEntry(path));
+			Charset cs = Charset.forName("ISO-8859-1");
+            ZipFile original = new ZipFile(file, cs);
+            Enumeration entries = original.entries();
+            byte[] buffer = new byte[BUFF];
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                // create a new empty ZipEntry
+                ZipEntry newEntry = new ZipEntry(path+entry.getName());
+	//      outputStream.putNextEntry(entry);
+                zout.putNextEntry(newEntry);
+                InputStream in = original.getInputStream(entry);
+                while (0 < in.available()) {
+                    int read = in.read(buffer);
+                    zout.write(buffer, 0, read);
+                }
+                in.close();
+                zout.closeEntry(); //newEntry
+            }
+            zout.closeEntry(); //path
+        } catch (IOException e) {
+            log.error("Zip copy IOException"+e);
+            e.getStackTrace();
+        }
+    }
+
 	    
 	@Override
 	public String doAction() {

@@ -48,7 +48,6 @@ public class MetadataTable extends CustomComponent {
 	private IndexedContainer qResultContainer;
 	private static final String ETSIN_METADATA_BASE_URL_FI = "http://etsin.avointiede.fi/fi/dataset/";
 	private static final String ETSIN_METADATA_BASE_URL_EN = "http://etsin.avointiede.fi/en/dataset/";
-	private static final String LICENCE_BASE_URL = "http://etsin.avointiede.fi/storage/f/paituli/ehdot/";
 	private static final String PAITULI_BASE_URL = "/web/paituli/latauspalvelu";
 	private Translator translator;
 	
@@ -129,7 +128,7 @@ public class MetadataTable extends CustomComponent {
 	}
 
 	private List<MetadataBean> getMetadata() {
-		final String METADATA_API_URL = "http://127.0.0.1:" + UI.getCurrent().getPage().getLocation().getPort() + "/paituli-portlet/paituliAPI.jsp";
+		final String METADATA_API_URL = "https://"+UI.getCurrent().getPage().getLocation().getHost()+":443/paituli-portlet/paituliAPI.jsp";
 		List<MetadataBean> beans = new ArrayList<>();
 		HttpURLConnection conn = null;
 		InputStream istream = null;
@@ -227,7 +226,7 @@ public class MetadataTable extends CustomComponent {
 				Link etsinMetadataLink = new Link(translator.localize("Table.Column.Property.Metadata"), etsinMetadataRes);
 				etsinMetadataLink.setTargetName("_blank");
 				dataRow.getItemProperty(translator.localize("Table.Column.Property.Metadata")).setValue(etsinMetadataLink);
-				ExternalResource licenceRes = new ExternalResource(LICENCE_BASE_URL + licence);
+				ExternalResource licenceRes = new ExternalResource(licence);
 				Link licenceLink = new Link(translator.localize("Table.Column.Property.Licence"), licenceRes);
 				licenceLink.setTargetName("_blank");
 				dataRow.getItemProperty(translator.localize("Table.Column.Property.Licence")).setValue(licenceLink);

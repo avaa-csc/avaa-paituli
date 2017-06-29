@@ -18,7 +18,7 @@ public class SendPaituliEmail extends SendEmailThread<String> {
 	
 	private AvaaLogger log = new AvaaLogger(this.getClass().getName());
 
-	private static final String FROM_EMAIL_ADDRESS = "no-reply@avaa.tdata.fi";
+	private static final String FROM_EMAIL_ADDRESS = "PaITuli (CSC) <gis@csc.fi>";
 	private static final String SUBJECT_FI = "PaITulin lataustiedosto on valmiina";
 	private static final String SUBJECT_EN = "PaITuli data download is available";
 	private static final String BODY_TEXT_1_FI = "Ladattava aineisto: !, !, !, !, !, !.<br><br>";
@@ -29,8 +29,6 @@ public class SendPaituliEmail extends SendEmailThread<String> {
 	private static final String BODY_TEXT_3_EN = "The files ordered can be downloaded from:<br><br><a href='!'>!</a>.<br><br>";
 	private static final String BODY_TEXT_4_FI = "Kiitos lataustilauksestasi.<br><br>";
 	private static final String BODY_TEXT_4_EN = "Thank you for downloading from PaITuli.<br><br>";
-	private static final String BODY_TEXT_5_FI = "Älä vastaa tähän viestiin. Ongelmatapauksissa ota yhteyttä palvelun tukeen osoitteessa <a href='mailto:giscoord@csc.fi'>giscoord@csc.fi</a>.";
-	private static final String BODY_TEXT_5_EN = "Please do not reply to this message. In case of problems, contact the support service on <a href='mailto:giscoord@csc.fi'>giscoord@csc.fi</a>.";
 	private final String language;
 	private final String org;
 	private final String data;
@@ -69,14 +67,12 @@ public class SendPaituliEmail extends SendEmailThread<String> {
 			bt2 = BODY_TEXT_2_FI;
 			bt3 = BODY_TEXT_3_FI;
 			bt4 = BODY_TEXT_4_FI;
-			bt5 = BODY_TEXT_5_FI;
 		} else if ("en_US".equals(language)) {
 			subject = SUBJECT_EN;
 			bt1 = BODY_TEXT_1_EN;
 			bt2 = BODY_TEXT_2_EN;
 			bt3 = BODY_TEXT_3_EN;
 			bt4 = BODY_TEXT_4_EN;
-			bt5 = BODY_TEXT_5_EN;
 		}
 		if(zipUrl != null) {
 			StringBuffer sb = new StringBuffer();
@@ -122,7 +118,8 @@ public class SendPaituliEmail extends SendEmailThread<String> {
 					htmlFilenames += "<br>" + filename;
 				}
 				sb.append(bt2.replaceFirst("!", htmlFilenames));
-				StoreLog.writeDB(toEmailAddress, orderedFilenames.size(), dataId);
+				StoreLog st = new StoreLog(toEmailAddress, orderedFilenames.size(), dataId);
+				st.start();
 			}
 			sb.append(bt3.replaceAll("!", zipUrl));
 			sb.append(bt4);

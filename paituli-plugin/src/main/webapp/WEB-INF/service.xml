@@ -3,8 +3,8 @@
 <service-builder package-path="fi.csc.avaa.paituli.db">
  <author>pj</author>
  <namespace>paituli</namespace>
- <entity name="paituliloki" table="loki" local-service="true"  remote-service="false" data-source="paituli" session-factory="paituliSessionFactory">
-  <column name="event_id" type="int" primary="true" id-type="increment"></column>
+ <entity name="paituliloki" table="loki" local-service="true"  cache-enabled="false" remote-service="false" data-source="paituli" session-factory="paituliSessionFactory">
+  <column name="event_id" type="int" primary="true" ></column>
   <column name="saltedhash" type="String"></column>
   <column name="organisaatio" type="String"></column>
   <column name="aineisto" type="String"></column>
